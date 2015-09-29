@@ -50,7 +50,8 @@ val five = two + three
 val ten = _1 _0 _1 _0
 
 isTriangle(three, four, five) //true
-isTriangle(three, four, ten) //error: could not find implicit value for parameter c$lessa$plusb:#<#[this.Out,A+B]
+isTriangle(three, four, ten) //error: 
+// could not find implicit value for parameter c$lessa$plusb:#<#[this.Out,A+B]
 ```
 
 last one is pretty informative: could not prove that `c<a+b`
