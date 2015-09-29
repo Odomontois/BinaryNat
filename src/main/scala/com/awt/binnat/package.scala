@@ -12,11 +12,11 @@ package object binnat extends BNatTypes with BLessImpl with BSumImpl {
   }
 
   object LessOp extends LowLevelLess {
-    implicit def lessIsTrue[A <: BNat, B <: BNat]: Case.Aux[A, B, Boolean] = at[A, B]((_, _) ⇒ true)
+    implicit def lessIsTrue[A <: BNat, B <: BNat](implicit lt: A #<# B): Case.Aux[A, B, Boolean] = at[A, B]((_, _) ⇒ true)
   }
 
   implicit class BNatOps[N <: BNat](val n: N) extends AnyVal {
-    def + [M <: BNat, Out <: BNat](m: M)(implicit sum: #+#.Aux[N, M, Out], v: Out): Out = v
+    def +[M <: BNat, Out <: BNat](m: M)(implicit sum: #+#.Aux[N, M, Out], v: Out): Out = v
   }
 
   implicit class BNonZeroOps[N <: BNonZero](val n: N) extends AnyVal {
