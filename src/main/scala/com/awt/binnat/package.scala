@@ -6,7 +6,7 @@
 package com.awt
 import shapeless.Poly2
 
-package object binnat extends BNatTypes with BLessImpl with BSumImpl {
+package object binnat extends BNatTypes with BCompareImpl with BSumImpl {
   trait LowLevelLess extends Poly2 {
     implicit def defaultIsFalse[A <: BNat, B <: BNat]: Case.Aux[A, B, Boolean] = at[A, B]((_, _) ⇒ false)
   }
