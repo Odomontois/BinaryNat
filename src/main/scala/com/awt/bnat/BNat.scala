@@ -6,6 +6,8 @@
 package com.awt.bnat
 import BNat._
 
+import scala.language.implicitConversions
+
 sealed trait BNat {
   def toBigInt: BigInt
 }
@@ -50,21 +52,26 @@ trait BNatTypes {
   implicit def constructOdd[X <: BNat](implicit prev: X) = BOdd(prev)
 }
 
-object BNat extends BNatTypes {
+class BNonZeroOps[N <: BNonZero](val n: N) extends AnyVal {
+  def ##[D <: BNat](d: D)(implicit nat: (N ## D)): nat.Out = nat.nat
+
+  def _1 = BOdd(n)
+
+  def _0 = BEven(n)
+
+  def _1[D <: BNat](d: D)(implicit nat: (BOdd[N] ## D)): nat.Out = nat.nat
+
+  def _0[D <: BNat](d: D)(implicit nat: (BEven[N] ## D)): nat.Out = nat.nat
+}
+
+trait BNatAll extends BNatTypes {
   type BNonZero = BSucc[_]
 
   type BZero = BZero.type
 
-  implicit class BNonZeroOps[N <: BNonZero](val n: N) extends AnyVal {
-    def ##[D <: BNat](d: D)(implicit nat: (N ## D)): nat.Out = nat.nat
-
-    def _1 = BOdd(n)
-
-    def _0 = BEven(n)
-
-    def _1[D <: BNat](d: D)(implicit nat: (BOdd[N] ## D)): nat.Out = nat.nat
-
-    def _0[D <: BNat](d: D)(implicit nat: (BEven[N] ## D)): nat.Out = nat.nat
-  }
-
+  implicit def toBNonZeroOps[N <: BNonZero](x: N): BNonZeroOps[N] = new BNonZeroOps(x)
 }
+
+object BNat extends BNatAll
+
+

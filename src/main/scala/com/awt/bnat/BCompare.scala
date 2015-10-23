@@ -37,7 +37,8 @@ trait BCompareImpl extends BCompareLowLevel {
   implicit def _p1_lt_p1[X <: BNat, Y <: BNat](implicit lt: X #<# Y) = new (BOdd[X] #<# BOdd[Y])()
 }
 
-object BCompare extends BCompareImpl {
+
+trait BCompareAll extends BCompareImpl{
   type LT = Ordering.LT.type
   type GT = Ordering.GT.type
   type EQ = Ordering.EQ.type
@@ -46,3 +47,4 @@ object BCompare extends BCompareImpl {
   implicit def bOrder[X <: BNat, Y <: BNat](x: X, y: Y)
                                            (implicit bCompare: BCompare[X, Y]): bCompare.Result = bCompare.result
 }
+object BCompare extends BCompareAll
