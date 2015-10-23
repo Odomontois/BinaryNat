@@ -6,7 +6,7 @@
 package com.awt.bnat
 import BNat._
 
-import scala.language.implicitConversions
+import scala.language.{higherKinds, implicitConversions}
 
 sealed trait BNat {
   def toBigInt: BigInt
@@ -26,42 +26,35 @@ case class BOdd[T <: BNat](prev: T) extends BSucc[T] {
   def toBigInt = (prev.toBigInt << 1) + 1
 }
 trait BNatTypes {
-  final type _0 = BZero.type
+  final type _0_ = BZero.type
 
-  final type _1 = BOdd[BZero.type]
+  final type _1_ = BOdd[BZero.type]
 
-  sealed trait ##[P <: BNonZero, D <: BNat] {
-    type Out <: BNat
-    def nat: Out
-  }
+  final type _0[X <: BNonZero] = BEven[X]
 
-  implicit val _0 = BZero
+  final type _1[X <: BNonZero] = BOdd[X]
 
-  val _1 = BOdd(BZero)
+  final type ##[X <: BNonZero, F[_X <: BNonZero]] = F[X]
 
-  implicit def hashConstructEven[X <: BNonZero](implicit prev: X) = new (X ## _0)() {
-    type Out = BEven[X]
-    val nat: Out = BEven(prev)
-  }
-  implicit def hashConstructOdd[X <: BNonZero](implicit prev: X) = new (X ## _1)() {
-    type Out = BOdd[X]
-    val nat: Out = BOdd(prev)
-  }
+  implicit val _0_ = BZero
+
+  val _1_ = BOdd(BZero)
+
+  def _1[X <: BNonZero]: X ⇒ BOdd[X] = BOdd(_)
+  def _0[X <: BNonZero]: X ⇒ BEven[X] = BEven(_)
 
   implicit def constructEven[X <: BNonZero](implicit prev: X) = BEven(prev)
   implicit def constructOdd[X <: BNat](implicit prev: X) = BOdd(prev)
 }
 
-class BNonZeroOps[N <: BNonZero](val n: N) extends AnyVal {
-  def ##[D <: BNat](d: D)(implicit nat: (N ## D)): nat.Out = nat.nat
+class BNonZeroOps[X <: BNonZero](val x: X) extends AnyVal {
+  def _1 = BOdd(x)
 
-  def _1 = BOdd(n)
+  def _0 = BEven(x)
 
-  def _0 = BEven(n)
+  def _1[Y <: BNat](d: BOdd[X] ⇒ Y): Y = d(BOdd(x))
 
-  def _1[D <: BNat](d: D)(implicit nat: (BOdd[N] ## D)): nat.Out = nat.nat
-
-  def _0[D <: BNat](d: D)(implicit nat: (BEven[N] ## D)): nat.Out = nat.nat
+  def _0[Y <: BNat](d: BEven[X] ⇒ Y): Y = d(BEven(x))
 }
 
 trait BNatAll extends BNatTypes {

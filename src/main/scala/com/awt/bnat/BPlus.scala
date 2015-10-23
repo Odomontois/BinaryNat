@@ -22,9 +22,9 @@ sealed trait BPlusM1[X <: BNat, Y <: BNat] {
 }
 
 trait BPlusImpl {
-  implicit object _0_plus_0 extends BPlus[_0, _0] {type Out = _0}
-  implicit def _0_plus_nz[X <: BNonZero] = new BPlusNZ[_0, X] {type Out = X}
-  implicit def _nz_plus_0[X <: BNonZero] = new BPlusNZ[X, _0] {type Out = X}
+  implicit object _0_plus_0 extends BPlus[_0_, _0_] {type Out = _0_}
+  implicit def _0_plus_nz[X <: BNonZero] = new BPlusNZ[_0_, X] {type Out = X}
+  implicit def _nz_plus_0[X <: BNonZero] = new BPlusNZ[X, _0_] {type Out = X}
 
   implicit def _even_plus_even[X <: BNonZero, Y <: BNonZero](implicit sum: BPlusNZ[X, Y]) =
     new BPlusNZ[BEven[X], BEven[Y]] {type Out = BEven[sum.Out]}
@@ -38,16 +38,16 @@ trait BPlusImpl {
 }
 
 trait BPlusM1Impl {
-  implicit object _0_plus_0_m1 extends BPlusM1[_0, _0] {type Out = _1}
+  implicit object _0_plus_0_m1 extends BPlusM1[_0_, _0_] {type Out = _1_}
 
   implicit def _0_plus_even_m1[X <: BNonZero] =
-    new BPlusM1[_0, BEven[X]] {type Out = BOdd[X]}
+    new BPlusM1[_0_, BEven[X]] {type Out = BOdd[X]}
   implicit def _even_plus_0_m1[X <: BNonZero] =
-    new BPlusM1[BEven[X], _0] {type Out = BOdd[X]}
-  implicit def _0_plus_odd_m1[X <: BNat](implicit next: BPlusM1[_0, X]) =
-    new BPlusM1[_0, BOdd[X]] {type Out = BEven[next.Out]}
-  implicit def _odd_plus_0_m1[X <: BNat](implicit next: BPlusM1[_0, X]) =
-    new BPlusM1[BOdd[X], _0] {type Out = BEven[next.Out]}
+    new BPlusM1[BEven[X], _0_] {type Out = BOdd[X]}
+  implicit def _0_plus_odd_m1[X <: BNat](implicit next: BPlusM1[_0_, X]) =
+    new BPlusM1[_0_, BOdd[X]] {type Out = BEven[next.Out]}
+  implicit def _odd_plus_0_m1[X <: BNat](implicit next: BPlusM1[_0_, X]) =
+    new BPlusM1[BOdd[X], _0_] {type Out = BEven[next.Out]}
 
   implicit def _even_plus_even_m1[X <: BNonZero, Y <: BNonZero](implicit sum: BPlus[X, Y]) =
     new BPlusM1[BEven[X], BEven[Y]] {type Out = BOdd[sum.Out]}

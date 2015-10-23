@@ -4,7 +4,8 @@ Natural numbers in binary representation for type-level calculations in scala
 Use it:
 
 ```scala
-import com.awt.binnat._
+import com.awt.bnat._
+import com.awt.bnat.all._
 ```
 
 Define numbers in binary form:
