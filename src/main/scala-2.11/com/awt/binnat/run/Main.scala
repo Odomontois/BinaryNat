@@ -5,17 +5,15 @@ package com.awt.binnat.run
  * Date  : 01.10.2015
  * Time  : 13:16
  */
-import com.awt.binnat._
+import com.awt.bnat._
+import com.awt.bnat.all._
 
 import scala.io.StdIn
 object Main {
   def main(args: Array[String]) {
-    val a = _1 _1
-    val b = _1 _0 _1
-    StdIn.readLine()
+    val a = _1_ _1 _0
+    val b = _1_ _0 _1 _1
 
-    System.identityHashCode(a)
-
-    println(a + b)
+    println((a * b).toBigInt)
   }
 }

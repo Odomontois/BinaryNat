@@ -5,4 +5,4 @@
  */
 package com.awt.bnat
 
-object all  extends BNatAll with BCompareAll with BPlusAll with BMinusAll
+object all  extends BNatAll with BCompareAll with BPlusAll with BTimesAll/*with BMinusAll*/
