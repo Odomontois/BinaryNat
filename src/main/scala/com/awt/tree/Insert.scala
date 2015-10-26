@@ -14,19 +14,10 @@ sealed trait Insert[A, B] {
   type Higher
 
   def apply(elem: A, tree: B): B \/ Higher
-
-  def higher: Insert[A, _ >: Higher]
 }
 
 
 object Insert {
-  def apply[A, B, H](next: => Insert[A, H])(insert: (A, B) => B \/ H) = new Insert[A, B] {
-    type Higher = H
-
-    def apply(elem: A, tree: B) = insert(elem, tree)
-
-    def higher = next
-  }
 }
 
 trait InsertImpl {
@@ -34,8 +25,6 @@ trait InsertImpl {
     type Higher = A
 
     def apply(elem: A, _unit: Unit) = elem.right
-
-    def higher = insertLeaf
   }
 
 
@@ -48,20 +37,11 @@ trait InsertImpl {
       case LT => Tree2(elem, tree, tree).right
     }
 
-    def higher = {
-      implicit val lower = this
-      insertNode[A, A]
-    }
   }
 
   implicit def insertNode[A: Order, B](implicit lower: Insert[A, B] {type Higher = Tree2[A, B]}): Insert[A, Tree23[A, B]] =
     new Insert[A, Tree23[A, B]] {
       type Higher = Tree2[A, Tree23[A, B]]
-
-      def higher = {
-        implicit val lower = this
-        insertNode[A, Tree23[A, B]]
-      }
 
       def apply(elem: A, tree: Tree23[A, B]) = tree match {
         case Tree2(ltree, rtree, sep) => elem cmp sep match {

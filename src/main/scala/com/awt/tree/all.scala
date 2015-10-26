@@ -5,6 +5,6 @@ package com.awt.tree
   * Date: 25-Oct-15
   * Time: 21:03
   */
-object all extends FoldableImpl with InsertImpl with RemoveImpl{
+object all extends FoldableImpl with InsertImpl with RemoveImpl with  TreeSetImpl{
 
 }
