@@ -30,7 +30,7 @@ trait InsertImpl {
   }
 
   implicit def insertLeaf[A: Order] = new Insert[A, A] {
-    type Higher = Tree23[A, A]
+    type Higher = Tree2[A, A]
 
     def apply(elem: A, tree: A) = elem cmp tree match {
       case EQ => elem.left
