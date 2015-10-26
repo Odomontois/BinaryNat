@@ -18,7 +18,7 @@ trait FoldableImpl {
   }
 
 
-  implicit def foldableTree[T[_]](implicit foldable: Foldable[T]) = new Foldable.FromFoldMap[Tree23.Ind[T, ?]] {
+  implicit def foldableTree[T[_]](implicit foldable: Foldable[T]): Foldable[λ[X => Tree23[X, T[X]]]] = new Foldable.FromFoldMap[λ[X => Tree23[X, T[X]]]] {
     override def foldMap[A, B](fa: Tree23[A, T[A]])(f: (A) => B)(implicit F: Monoid[B]): B = fa match {
       case Tree2(ltree, rtree, _) => ltree.foldMap(f) ⊹ rtree.foldMap(f)
       case Tree3(ltree, mtree, rtree, _, _) => ltree.foldMap(f) ⊹ mtree.foldMap(f) ⊹ rtree.foldMap(f)

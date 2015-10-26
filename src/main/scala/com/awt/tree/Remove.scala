@@ -24,6 +24,9 @@ object Remove {
 }
 
 trait RemoveImpl {
+
+  def remove[A, T](a: A, t: T)(implicit r: Remove[A, T]): T \/ r.Lower = r(a, t)
+
   implicit def removeUnit[A] = Remove[A, Unit, Unit] { (elem, _unit) => ().left }
 
   implicit def removeLeaf[A: Equal] = Remove[A, A, Unit] { (elem, tree) =>

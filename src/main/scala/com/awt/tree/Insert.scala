@@ -16,20 +16,21 @@ sealed trait Insert[A, B] {
   def apply(elem: A, tree: B): B \/ Higher
 }
 
-
 object Insert {
+  type Aux[A, B, H] = Insert[A, B] {type Higher = H}
 }
 
 trait InsertImpl {
+  def insert[A, T](a: A, t: T)(implicit i: Insert[A, T]): T \/ i.Higher = i(a, t)
+
   implicit def insertUnit[A: Order] = new Insert[A, Unit] {
     type Higher = A
 
     def apply(elem: A, _unit: Unit) = elem.right
   }
 
-
   implicit def insertLeaf[A: Order] = new Insert[A, A] {
-    type Higher = Tree2[A, A]
+    type Higher = Tree23[A, A]
 
     def apply(elem: A, tree: A) = elem cmp tree match {
       case EQ => elem.left
