@@ -1,9 +1,10 @@
 /**
- * Author: Oleg Nizhnik
- * Date  : 22.10.2015
- * Time  : 15:03
- */
-package com.awt.bnat
+  * Author: Oleg Nizhnik
+  * Date  : 22.10.2015
+  * Time  : 15:03
+  */
+package bnat
+
 import BNat._
 
 import scala.language.{higherKinds, implicitConversions}
@@ -25,6 +26,7 @@ case class BEven[T <: BNonZero](prev: T) extends BSucc[T] {
 case class BOdd[T <: BNat](prev: T) extends BSucc[T] {
   def toBigInt = (prev.toBigInt << 1) + 1
 }
+
 trait BNatTypes {
   final type _0_ = BZero.type
 
@@ -42,7 +44,9 @@ trait BNatTypes {
 
   def _1[X <: BNonZero]: X ⇒ BOdd[X] = BOdd(_)
   def _0[X <: BNonZero]: X ⇒ BEven[X] = BEven(_)
+}
 
+trait BnatImpl {
   implicit def constructEven[X <: BNonZero](implicit prev: X) = BEven(prev)
   implicit def constructOdd[X <: BNat](implicit prev: X) = BOdd(prev)
 }
@@ -57,7 +61,7 @@ class BNonZeroOps[X <: BNonZero](val x: X) extends AnyVal {
   def _0[Y <: BNat](d: BEven[X] ⇒ Y): Y = d(BEven(x))
 }
 
-trait BNatAll extends BNatTypes {
+trait BNatSyntax extends BNatTypes {
   type BNonZero = BSucc[_]
 
   type BZero = BZero.type
@@ -65,6 +69,6 @@ trait BNatAll extends BNatTypes {
   implicit def toBNonZeroOps[N <: BNonZero](x: N): BNonZeroOps[N] = new BNonZeroOps(x)
 }
 
-object BNat extends BNatAll
+object BNat extends BnatImpl
 
 

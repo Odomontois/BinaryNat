@@ -1,4 +1,4 @@
-package com.awt.bnat
+package bnat
 
 import BNat._
 
@@ -31,9 +31,14 @@ trait BTimesImpl {
     new BTimesNZ[X, BOdd[Y]] {type Out = plus.Out}
 }
 
+object BTimes extends BTimesImpl
+
 class BTimesOps[X <: BNat](val x: X) extends AnyVal {
   def *[Y <: BNat, P <: BNat](y: Y)(implicit times: BTimes[X, Y] {type Out = P}, p: P) = p
 }
-trait BTimesAll extends BTimesImpl{
+
+trait BTimesSyntax{
+  type #*#[X <: BNat, Y <: BNat] = BTimes[X, Y]
+
   implicit def toMulOps[X <: BNat](x: X): BTimesOps[X] = new BTimesOps(x)
 }

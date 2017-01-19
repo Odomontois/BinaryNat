@@ -3,9 +3,7 @@
  * Date  : 22.10.2015
  * Time  : 15:11
  */
-package com.awt.bnat
-import com.awt.bnat.BCompare._
-import com.awt.bnat.BNat._
+package bnat
 
 import scala.language.higherKinds
 import scalaz.Ordering
@@ -19,9 +17,9 @@ sealed abstract class BCompareA[X <: BNat, Y <: BNat, O <: Ordering](val result:
   type Result = O
 }
 
-class #<#[X <: BNat, Y <: BNat] extends BCompareA[X, Y, LT](LT)
-class #>#[X <: BNat, Y <: BNat] extends BCompareA[X, Y, GT](GT)
-class #=#[X <: BNat, Y <: BNat] extends BCompareA[X, Y, EQ](EQ)
+class #<#[X <: BNat, Y <: BNat] private[bnat]() extends BCompareA[X, Y, LT](LT)
+class #>#[X <: BNat, Y <: BNat] private[bnat]() extends BCompareA[X, Y, GT](GT)
+class #=#[X <: BNat, Y <: BNat] private[bnat]() extends BCompareA[X, Y, EQ](EQ)
 
 trait BCompareLowLevel {
   implicit def bLessReverseIsMore[X <: BNat, Y <: BNat](implicit lt: X #<# Y) = new (Y #># X)()
@@ -38,13 +36,13 @@ trait BCompareImpl extends BCompareLowLevel {
 }
 
 
-trait BCompareAll extends BCompareImpl{
-  type LT = Ordering.LT.type
-  type GT = Ordering.GT.type
-  type EQ = Ordering.EQ.type
-  type #?#[X <: BNat, Y <: BNat] = BCompare[X, Y]
+trait BCompareSyntax{
+  final type LT = Ordering.LT.type
+  final type GT = Ordering.GT.type
+  final type EQ = Ordering.EQ.type
+  final type #?#[X <: BNat, Y <: BNat] = BCompare[X, Y]
 
-  implicit def bOrder[X <: BNat, Y <: BNat](x: X, y: Y)
+  final implicit def bOrder[X <: BNat, Y <: BNat](x: X, y: Y)
                                            (implicit bCompare: BCompare[X, Y]): bCompare.Result = bCompare.result
 }
-object BCompare extends BCompareAll
+object BCompare extends BCompareImpl

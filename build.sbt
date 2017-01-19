@@ -1,4 +1,6 @@
-scalaVersion := "2.11.7"
+scalaVersion := "2.12.1"
+
+organization := "odomontois"
 
 name := "bnat"
 
@@ -9,10 +11,10 @@ resolvers += Resolver.sonatypeRepo("releases")
 fork in run := true
 
 libraryDependencies ++= Seq(
-  "com.chuusai" %% "shapeless" % "2.2.5",
-  "org.scalaz" % "scalaz-core_2.11" % "7.2.0-M4",
-  "org.spire-math" %% "spire" % "0.10.1")
+  "com.chuusai" %% "shapeless" % "2.3.2",
+  "org.scalaz" % "scalaz-core_2.11" % "7.2.8",
+  "org.spire-math" %% "spire" % "0.13.0")
 
 resolvers += Resolver.sonatypeRepo("releases")
 
-addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.7.1")
+addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.3")

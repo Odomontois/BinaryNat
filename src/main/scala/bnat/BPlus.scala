@@ -3,7 +3,8 @@
  * Date  : 23.10.2015
  * Time  : 10:47
  */
-package com.awt.bnat
+package bnat
+
 import BPlus._
 import BNat._
 
@@ -34,7 +35,6 @@ trait BPlusImpl {
     new BPlusNZ[BOdd[X], BEven[Y]] {type Out = BOdd[sum.Out]}
   implicit def _odd_plus_odd[X <: BNat, Y <: BNat](implicit sum1: BPlusM1[X, Y]) =
     new BPlusNZ[BOdd[X], BOdd[Y]] {type Out = BEven[sum1.Out]}
-
 }
 
 trait BPlusM1Impl {
@@ -63,10 +63,10 @@ class BPlusOps[X <: BNat](val x: X) extends AnyVal {
   def +[Y <: BNat, S <: BNat](y: Y)(implicit sum: BPlus[X, Y] {type Out = S}, snat: S) = snat
 }
 
-trait BPlusAll extends BPlusImpl with BPlusM1Impl {
+trait BPlusSyntax extends BPlusImpl with BPlusM1Impl {
   type #+#[X <: BNat, Y <: BNat] = BPlus[X, Y]
 
   @inline implicit def makeBplusOps[X <: BNat](x: X): BPlusOps[X] = new BPlusOps(x)
 }
 
-object BPlus extends BPlusAll
+object BPlus extends BPlusImpl

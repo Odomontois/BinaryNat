@@ -3,7 +3,8 @@
  * Date  : 23.10.2015
  * Time  : 12:52
  */
-package com.awt.bnat
+package bnat
+
 import BNat._
 
 import scala.language.implicitConversions
@@ -16,15 +17,15 @@ sealed trait BMinusNZ[A <: BNonZero, B <: BNat] extends BMinus[A, B] {
   type Out <: BNonZero
 }
 
-trait BMinusM1[A <: BNonZero, B <: BNat] {
+sealed trait BMinusM1[A <: BNonZero, B <: BNat] {
   type Out <: BNat
 }
 
-trait BMinusM1NZ[A <: BNonZero, B <: BNat] extends BMinusM1[A, B] {
+sealed trait BMinusM1NZ[A <: BNonZero, B <: BNat] extends BMinusM1[A, B] {
   type Out <: BNonZero
 }
 
-trait BMinusImpl {
+sealed trait BMinusImpl extends BMinusM1Impl{
   implicit def _nz_minus_0[X <: BNonZero] = new BMinusNZ[X, _0_] {type Out = X}
   implicit def _x_minus_x[X <: BNat] = new BMinus[X, X] {type Out = _0_}
 
@@ -38,7 +39,7 @@ trait BMinusImpl {
     new BMinusNZ[BOdd[X], BOdd[Y]] {type Out = BEven[minus.Out]}
 }
 
-trait BMinusM1Impl {
+sealed trait BMinusM1Impl {
   implicit object _one_minus_0_m1 extends BMinusM1[_1_, _0_] {type Out = _0_}
   implicit def _2xp1_minus_2x_m1[X <: BNonZero] =
     new BMinusM1[BOdd[X], BEven[X]] {type Out = _0_}
@@ -62,9 +63,10 @@ class BMinusOps[X <: BNat](val x: X) extends AnyVal {
   def -[Y <: BNat, D <: BNat](y: Y)(implicit diff: BMinus[X, Y] {type Out = D}, nat: D) = nat
 }
 
-trait BMinusAll extends BMinusImpl with BMinusM1Impl {
-  type #-#[X <: BNat, Y <: BNat] = BMinus[X, Y]
+trait BMinusSyntax {
+  type #-#[X <: BNat, Y <: BNat] = BMinus[X,Y]
+
   @inline implicit def toMinusOps[X <: BNat](x: X): BMinusOps[X] = new BMinusOps[X](x)
 }
 
-object BMinus extends BMinusAll
+object BMinus extends BMinusImpl
